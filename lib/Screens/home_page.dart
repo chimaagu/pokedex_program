@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pokedex_program/Models/all_pokes_model.dart';
+import 'package:pokedex_program/Provider/pokedex_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -65,82 +67,80 @@ class _HomePageState extends State<HomePage>
             ),
           ),
           Expanded(
-            child: GridView(
-              padding: const EdgeInsets.all(15),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 14,
-                  mainAxisSpacing: 14,
-                  mainAxisExtent: 186),
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  // height: 186,
-                  width: 110,
-                  color: Colors.white,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: double.maxFinite,
-                        color: const Color(0xfff3f9ef),
-                        child: Image.asset("images/bulb.png"),
-                      ),
-                      const SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "#001",
-                          style: GoogleFonts.notoSans(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: const Color(0xff6B6B6B),
-                          ),
+            child: FutureBuilder<List<Results>>(
+                future: Pokedex().fetchAllPokes(),
+                builder: (context, snapshot) {
+                  if (snapshot.data == null) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return GridView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.all(15),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 14,
+                      mainAxisSpacing: 14,
+                      mainAxisExtent: 186,
+                    ),
+                    itemBuilder: (context, index) {
+                      var data = snapshot.data![index];
+                      return Container(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        // height: 186,
+                        width: 110,
+                        color: Colors.white,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: double.maxFinite,
+                              color: const Color(0xfff3f9ef),
+                              child: Image.asset("images/bulb.png"),
+                            ),
+                            const SizedBox(height: 10),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                "#00$index",
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: const Color(0xff6B6B6B),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                data.name!,
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                "Grass, Poison",
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: const Color(0xff6B6B6B),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Bulbasaur",
-                          style: GoogleFonts.notoSans(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Grass, Poison",
-                          style: GoogleFonts.notoSans(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: const Color(0xff6B6B6B),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 186,
-                  width: 110,
-                  color: Colors.white,
-                ),
-                Container(
-                  height: 186,
-                  width: 110,
-                  color: Colors.white,
-                ),
-                Container(
-                  height: 186,
-                  width: 110,
-                  color: Colors.white,
-                ),
-              ],
-            ),
+                      );
+                    },
+                  );
+                }),
           )
         ],
       ),
