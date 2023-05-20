@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage>
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: Text(
-                                "#00$index",
+                                "#001",
                                 style: GoogleFonts.notoSans(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
